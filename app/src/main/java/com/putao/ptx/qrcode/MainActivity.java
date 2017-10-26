@@ -6,7 +6,6 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
-import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
@@ -29,7 +28,7 @@ import pub.devrel.easypermissions.EasyPermissions;
  * Time       : 09:38
  * Project    ：zxing_qrcode_demo.
  */
-public class MainActivity extends AppCompatActivity implements EasyPermissions.PermissionCallbacks {
+public class MainActivity extends BaseActivity implements EasyPermissions.PermissionCallbacks {
 
     /**
      * 扫描跳转Activity RequestCode
@@ -115,6 +114,7 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
                 }
                 if (bundle.getInt(CodeUtils.RESULT_TYPE) == CodeUtils.RESULT_SUCCESS) {
                     String result = bundle.getString(CodeUtils.RESULT_STRING);
+                    ScanResultActivity.luncher(getApplicationContext(), result);
                     Toast.makeText(this, "解析结果:" + result, Toast.LENGTH_LONG).show();
                 } else if (bundle.getInt(CodeUtils.RESULT_TYPE) == CodeUtils.RESULT_FAILED) {
                     Toast.makeText(MainActivity.this, "解析二维码失败", Toast.LENGTH_LONG).show();
@@ -132,6 +132,7 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
                     CodeUtils.analyzeBitmap(ImageUtil.getImageAbsolutePath(this, uri), new CodeUtils.AnalyzeCallback() {
                         @Override
                         public void onAnalyzeSuccess(Bitmap mBitmap, String result) {
+                            ScanResultActivity.luncher(getApplicationContext(), result);
                             Toast.makeText(MainActivity.this, "解析结果:" + result, Toast.LENGTH_LONG).show();
                         }
 

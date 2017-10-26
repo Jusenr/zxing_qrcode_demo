@@ -21,3 +21,28 @@ allprojects {
 task clean(type: Delete) {
     delete rootProject.buildDir
 }
+
+//获取版本号
+def getVersionName() {
+    int num = rootProject.ext.VERSION_NUM
+    if (num > 0) {
+        return String.format("%s.%d", rootProject.ext.VERSIONNAME, rootProject.ext.VERSION_NUM)
+    } else {
+        return rootProject.ext.VERSIONNAME
+    }
+}
+
+//获取当前时间
+def releaseTime(def format) {
+    return new Date().format(format)
+}
+
+ext {
+    APP_LOG_TAG = "ZXing_qrcode"//app打印日志的tag
+
+    VERSIONNAME = "1.1.0"
+    VERSIONCODE = 2
+    VERSION_NUM = 0 //内部测试使用的小版本号
+
+    MANIFESTPLACEHOLDERS = [UMENG_APPKEY_VALUE: "123456"]
+}

@@ -7,25 +7,75 @@ android {
         applicationId "com.putao.ptx.qrcode"
         minSdkVersion 19
         targetSdkVersion 26
-        versionCode 1
-        versionName "1.0"
+        manifestPlaceholders rootProject.ext.MANIFESTPLACEHOLDERS
+        versionCode rootProject.ext.VERSIONCODE as int
+        versionName rootProject.getVersionName()
+        //语言环境和logcat日志TAG设置
+        buildConfigField "String", "LOG_TAG", "\"${rootProject.ext.APP_LOG_TAG}\""
+        multiDexEnabled true
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
-        externalNativeBuild {
-            cmake {
-                cppFlags ""
-            }
+//        externalNativeBuild {
+//            cmake {
+//                cppFlags ""
+//            }
+//        }
+    }
+    signingConfigs {
+        release {
+            storeFile file("$rootDir/keystore.jks")
+            storePassword "github123"
+            keyAlias "githubapp"
+            keyPassword "github123"
         }
     }
     buildTypes {
         release {
-            minifyEnabled false
+            minifyEnabled true
+            shrinkResources true
+            zipAlignEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
+        }
+        debug {
+            minifyEnabled false
+            shrinkResources false
+            zipAlignEnabled true
+            signingConfig signingConfigs.release
         }
     }
-    externalNativeBuild {
-        cmake {
-            path "CMakeLists.txt"
+    lintOptions {
+        abortOnError false
+    }
+    dexOptions {
+        javaMaxHeapSize "4g"
+    }
+//    externalNativeBuild {
+//        cmake {
+//            path "CMakeLists.txt"
+//        }
+//    }
+    //产品渠道配置
+    productFlavors {
+        putao { versionName = "V" + defaultConfig.versionName }
+
+        productFlavors.all { flavor ->
+            flavor.manifestPlaceholders = [UMENG_CHANNEL_VALUE: name]
         }
+    }
+
+    //Apk包名自定义
+    applicationVariants.all {
+        variant ->
+            def apkFileName = rootProject.getVersionName()
+            def time = releaseTime("yyyyMMdd")
+            variant.outputs.each {
+                output ->
+                    def outputFile = output.outputFile
+                    if (outputFile != null && outputFile.name.endsWith('.apk')) {
+                        def fileName = outputFile.name.replace(".apk", "-${apkFileName}-${time}.apk")
+                        output.outputFile = new File(outputFile.parent, fileName)
+                    }
+            }
     }
 }
 
@@ -34,12 +84,26 @@ dependencies {
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
+    compile project(':lib-zxing')
     compile 'com.android.support:appcompat-v7:26.+'
     compile 'com.android.support:design:26.+'
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
-    testCompile 'junit:junit:4.12'
-
     compile 'pub.devrel:easypermissions:0.2.0'
+    compile 'com.android.support:multidex:1.0.1'
+    testCompile 'junit:junit:4.12'
+}
 
-    compile project(':lib-zxing')
+//编译结束后删除unaligned包
+android.applicationVariants.all { variant ->
+    variant.assemble.doLast {
+        variant.outputs.each { output ->
+            println "aligned " + output.outputFile
+            println "unaligned " + output.packageApplication.outputFile
+            File file = output.packageApplication.outputFile
+            if (variant.buildType.zipAlignEnabled && file.getName().contains("unaligned")) {
+                println "deleting " + file.getName()
+                file.delete()
+            }
+        }
+    }
 }

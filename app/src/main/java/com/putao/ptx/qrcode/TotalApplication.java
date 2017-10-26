@@ -1,6 +1,7 @@
 package com.putao.ptx.qrcode;
 
 import android.app.Application;
+import android.support.multidex.MultiDex;
 
 import com.uuzuche.lib_zxing.activity.ZXingLibrary;
 
@@ -18,6 +19,8 @@ public class TotalApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+
+        MultiDex.install(getApplicationContext());
 
         ZXingLibrary.initDisplayOpinion(getApplicationContext());
     }

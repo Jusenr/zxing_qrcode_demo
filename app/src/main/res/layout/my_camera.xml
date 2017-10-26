@@ -20,7 +20,7 @@
         app:inner_corner_color="@color/scan_corner_color"
         app:inner_corner_length="20dp"
         app:inner_corner_width="3dp"
-        app:inner_scan_bitmap="@drawable/scan_image"
+        app:inner_scan_bitmap="@mipmap/scan_image"
         app:inner_scan_speed="20"
         app:inner_scan_iscircle="false"
         />

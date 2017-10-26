@@ -3,7 +3,6 @@ package com.putao.ptx.qrcode;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
@@ -22,7 +21,7 @@ import com.uuzuche.lib_zxing.activity.CodeUtils;
  * Time       : 10:46
  * Project    ：zxing_qrcode_demo.
  */
-public class ThreeActivity extends AppCompatActivity {
+public class ThreeActivity extends BaseActivity {
 
     public EditText editText = null;
     public Button button = null;

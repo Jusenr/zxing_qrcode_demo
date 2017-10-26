@@ -3,7 +3,6 @@ package com.putao.ptx.qrcode;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.LinearLayout;
 
@@ -19,7 +18,7 @@ import com.uuzuche.lib_zxing.activity.CodeUtils;
  * Time       : 10:21
  * Project    ：zxing_qrcode_demo.
  */
-public class SecondActivity extends AppCompatActivity {
+public class SecondActivity extends BaseActivity {
 
     private CaptureFragment captureFragment;
 
