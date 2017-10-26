@@ -1,13 +1,17 @@
 package com.putao.ptx.qrcode;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.putao.ptx.qrcode.utils.CheckPermissionUtils;
@@ -81,6 +85,8 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
      * 初始化组件
      */
     private void initView() {
+        TextView tv_version = (TextView) findViewById(R.id.tv_version);
+        tv_version.setText(getVersionName(this));
         button1 = (Button) findViewById(R.id.button1);
         button2 = (Button) findViewById(R.id.button2);
         button3 = (Button) findViewById(R.id.button3);
@@ -242,5 +248,16 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
             default:
                 break;
         }
+    }
+
+    private String getVersionName(Context context) {
+        try {
+            PackageManager packageManager = context.getPackageManager();
+            PackageInfo packageInfo = packageManager.getPackageInfo(context.getPackageName(), 0);
+            return packageInfo.versionName;
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }
