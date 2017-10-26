@@ -115,7 +115,7 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
                 if (bundle.getInt(CodeUtils.RESULT_TYPE) == CodeUtils.RESULT_SUCCESS) {
                     String result = bundle.getString(CodeUtils.RESULT_STRING);
                     ScanResultActivity.luncher(getApplicationContext(), result);
-                    Toast.makeText(this, "解析结果:" + result, Toast.LENGTH_LONG).show();
+//                    Toast.makeText(this, "解析结果:" + result, Toast.LENGTH_LONG).show();
                 } else if (bundle.getInt(CodeUtils.RESULT_TYPE) == CodeUtils.RESULT_FAILED) {
                     Toast.makeText(MainActivity.this, "解析二维码失败", Toast.LENGTH_LONG).show();
                 }
@@ -133,7 +133,7 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
                         @Override
                         public void onAnalyzeSuccess(Bitmap mBitmap, String result) {
                             ScanResultActivity.luncher(getApplicationContext(), result);
-                            Toast.makeText(MainActivity.this, "解析结果:" + result, Toast.LENGTH_LONG).show();
+//                            Toast.makeText(MainActivity.this, "解析结果:" + result, Toast.LENGTH_LONG).show();
                         }
 
                         @Override
