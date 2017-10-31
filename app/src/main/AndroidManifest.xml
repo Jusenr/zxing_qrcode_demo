@@ -30,7 +30,7 @@
             android:name="UMENG_CHANNEL"
             android:value="${UMENG_CHANNEL_VALUE}"/>
 
-        <activity android:name=".MainActivity">
+        <activity android:name=".activity.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
@@ -38,14 +38,14 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".SecondActivity"
+            android:name=".activity.ScanActivity"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.NoActionBar"/>
         <activity
-            android:name=".ThreeActivity"
+            android:name=".activity.CreateActivity"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".ScanResultActivity"
+            android:name=".activity.ScanResultActivity"
             android:screenOrientation="portrait"/>
 
     </application>

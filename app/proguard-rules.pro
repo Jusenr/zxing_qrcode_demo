@@ -158,6 +158,9 @@
     public *** toString();
 }
 
+-keep class com.putao.**.qrcode {*;}
+-keep class com.jusenr.qrcode {*;}
+
 -dontwarn javax.annotation.**
 
 #保持注解类不被混淆

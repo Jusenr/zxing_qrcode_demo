@@ -3,7 +3,7 @@ package com.putao.ptx.qrcode;
 import android.app.Application;
 import android.support.multidex.MultiDex;
 
-import com.uuzuche.lib_zxing.activity.ZXingLibrary;
+import com.jusenr.qrcode.ZXingTools;
 
 /**
  * Description:
@@ -22,6 +22,6 @@ public class TotalApplication extends Application {
 
         MultiDex.install(getApplicationContext());
 
-        ZXingLibrary.initDisplayOpinion(getApplicationContext());
+        ZXingTools.initDisplayOpinion(getApplicationContext());
     }
 }
