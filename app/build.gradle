@@ -98,8 +98,8 @@ dependencies {
     compile 'pub.devrel:easypermissions:0.2.0'
     testCompile 'junit:junit:4.12'
 
-//    compile project(':qrcode')
-    compile "com.jusenr.android.library:qrcode:$PROJ_VERSIONNAME"
+    compile project(':qrcode')
+//    compile "com.jusenr.android.library:qrcode:$PROJ_VERSIONNAME"
 }
 
 //编译结束后删除unaligned包
