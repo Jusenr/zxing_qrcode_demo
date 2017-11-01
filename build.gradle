@@ -40,8 +40,8 @@ def releaseTime(def format) {
 ext {
     APP_LOG_TAG = "ZXing_qrcode"//app打印日志的tag
 
-    VERSIONNAME = "1.1.0"
-    VERSIONCODE = 2
+    VERSIONNAME = "1.2.0"
+    VERSIONCODE = 3
     VERSION_NUM = 0 //内部测试使用的小版本号
 
     MANIFESTPLACEHOLDERS = [UMENG_APPKEY_VALUE: "123456"]

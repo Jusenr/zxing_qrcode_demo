@@ -116,30 +116,13 @@ public class CaptureFragment extends Fragment implements SurfaceHolder.Callback 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        inactivityTimer.shutdown();
         if (handler != null) {
             handler.quitSynchronously();
             handler = null;
         }
+        inactivityTimer.shutdown();
     }
 
-    /**
-     * 重置扫描
-     */
-    public void reStartPreview() {
-        if (handler != null) {
-            handler.restartPreviewAndDecode();
-        }
-    }
-
-    /**
-     * 停止扫描
-     */
-    public void stopPreview() {
-        if (handler != null) {
-            handler.quitSynchronously();
-        }
-    }
 
     /**
      * Handler scan result
@@ -162,6 +145,24 @@ public class CaptureFragment extends Fragment implements SurfaceHolder.Callback 
         }
     }
 
+    /**
+     * 重置扫描
+     */
+    public void reStartPreview() {
+        if (handler != null) {
+            handler.restartPreviewAndDecode();
+        }
+    }
+
+    /**
+     * 停止扫描
+     */
+    public void stopPreview() {
+        if (handler != null) {
+            handler.quitSynchronously();
+        }
+    }
+
     private void initCamera(SurfaceHolder surfaceHolder) {
         try {
             CameraManager.get().openDriver(surfaceHolder);
@@ -181,8 +182,7 @@ public class CaptureFragment extends Fragment implements SurfaceHolder.Callback 
     }
 
     @Override
-    public void surfaceChanged(SurfaceHolder holder, int format, int width,
-                               int height) {
+    public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
 
     }
 
@@ -192,7 +192,6 @@ public class CaptureFragment extends Fragment implements SurfaceHolder.Callback 
             hasSurface = true;
             initCamera(holder);
         }
-
     }
 
     @Override

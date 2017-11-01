@@ -31,7 +31,7 @@ public class ScanActivity extends BaseActivity {
         setContentView(R.layout.activity_scan);
         captureFragment = new CaptureFragment();
         // 为二维码扫描界面设置定制化界面
-        CodeUtils.setFragmentArgs(captureFragment, R.layout.activity_capture);
+        CodeUtils.setFragmentArgs(captureFragment, R.layout.layout_camera);
         captureFragment.setAnalyzeCallback(analyzeCallback);
         getSupportFragmentManager().beginTransaction().replace(R.id.fl_my_container, captureFragment).commit();
 
