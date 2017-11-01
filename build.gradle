@@ -21,6 +21,7 @@ allprojects {
     repositories {
         jcenter()
         maven { url "https://jitpack.io" }
+        maven { url "https://dl.bintray.com/jusenr/maven/" }
         //AAR local library dependencies
         flatDir {
             dirs 'libs'
