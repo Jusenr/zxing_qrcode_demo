@@ -7,9 +7,9 @@ android {
         applicationId "com.putao.ptx.qrcode"
         minSdkVersion 19
         targetSdkVersion 26
-        manifestPlaceholders rootProject.ext.MANIFESTPLACEHOLDERS
-        versionCode rootProject.ext.VERSIONCODE as int
+        versionCode project.properties["PROJ_VERSIONCODE"] as int
         versionName rootProject.getVersionName()
+        manifestPlaceholders rootProject.ext.MANIFESTPLACEHOLDERS
         //语言环境和logcat日志TAG设置
         buildConfigField "String", "LOG_TAG", "\"${rootProject.ext.APP_LOG_TAG}\""
         multiDexEnabled true
@@ -22,10 +22,10 @@ android {
     }
     signingConfigs {
         release {
-            storeFile file("$rootDir/keystore.jks")
-            storePassword "github123"
-            keyAlias "githubapp"
-            keyPassword "github123"
+            storeFile file(SIGN_FILEPATH)
+            storePassword SIGN_STOREPASSWORD
+            keyAlias SIGN_KEYALIAS
+            keyPassword SIGN_KEYPASSWORD
         }
     }
     buildTypes {
@@ -43,6 +43,13 @@ android {
             signingConfig signingConfigs.release
         }
     }
+    sourceSets {
+        main {
+            java.srcDirs = ['src/main/java']
+            jniLibs.srcDirs = ['libs']
+            assets.srcDirs = ['src/main/assets']
+        }
+    }
     lintOptions {
         abortOnError false
     }
@@ -56,7 +63,7 @@ android {
 //    }
     //产品渠道配置
     productFlavors {
-        putao { versionName = "V" + defaultConfig.versionName }
+        huawei { versionName = "V" + defaultConfig.versionName }
 
         productFlavors.all { flavor ->
             flavor.manifestPlaceholders = [UMENG_CHANNEL_VALUE: name]
