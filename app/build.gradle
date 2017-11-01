@@ -30,16 +30,14 @@ android {
     }
     buildTypes {
         release {
-            minifyEnabled true
-            shrinkResources true
-            zipAlignEnabled true
+            minifyEnabled false
+            shrinkResources false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             signingConfig signingConfigs.release
         }
         debug {
             minifyEnabled false
             shrinkResources false
-            zipAlignEnabled true
             signingConfig signingConfigs.release
         }
     }
@@ -63,6 +61,8 @@ android {
 //    }
     //产品渠道配置
     productFlavors {
+        online { versionName = "V" + defaultConfig.versionName }
+
         huawei { versionName = "V" + defaultConfig.versionName }
 
         productFlavors.all { flavor ->

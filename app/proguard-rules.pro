@@ -159,7 +159,8 @@
 }
 
 -keep class com.putao.**.qrcode {*;}
--keep class com.jusenr.qrcode {*;}
+-keep class com.jusenr.qrcode.** {*;}
+-keep class com.jusenr.qrcode.ZXingTools {*;}
 
 -dontwarn javax.annotation.**
 

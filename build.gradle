@@ -55,9 +55,9 @@ task clean(type: Delete) {
     delete rootProject.buildDir
 }
 
-task assemble(type: Assemble) {
-    delete "$rootDir/app/build/outputs"
-}
+//task assemble(type: Assemble) {
+//    delete "$rootDir/app/build/outputs"
+//}
 
 //Get version number
 def getVersionName() {
