@@ -5,7 +5,7 @@
  ---
 
  [ ![Bintray](https://img.shields.io/badge/bintray-v1.0.0-brightgreen.svg) ](https://bintray.com/jusenr/maven/qrcode/_latestVersion)
- [ ![Jitpack](https://jitpack.io/v/Jusenr/qrcode.svg) ](https://jitpack.io/#Jusenr/qrcode)
+ [ ![Jitpack](https://jitpack.io/v/Jusenr/zxing_qrcode_demo.svg) ](https://jitpack.io/#Jusenr/zxing_qrcode_demo)
  [ ![API](https://img.shields.io/badge/API-19%2B-blue.svg) ](https://developer.android.com/about/versions/android-4.4.html)
  [ ![License](http://img.shields.io/badge/License-Apache%202.0-blue.svg) ](http://www.apache.org/licenses/LICENSE-2.0)
 
