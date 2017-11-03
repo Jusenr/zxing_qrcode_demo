@@ -2,7 +2,10 @@ package com.putao.ptx.qrcode.activity;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.Toast;
@@ -11,6 +14,7 @@ import com.jusenr.qrcode.activity.CaptureFragment;
 import com.jusenr.qrcode.util.CodeUtils;
 import com.putao.ptx.qrcode.R;
 import com.putao.ptx.qrcode.base.BaseActivity;
+import com.putao.ptx.qrcode.utils.ImageUtil;
 
 /**
  * Description: 定制化显示扫描界面
@@ -22,6 +26,11 @@ import com.putao.ptx.qrcode.base.BaseActivity;
  * Project    ：zxing_qrcode_demo.
  */
 public class ScanActivity extends BaseActivity {
+    /**
+     * 选择系统图片Request Code
+     */
+    public static final int REQUEST_IMAGE = 112;
+
 
     private CaptureFragment captureFragment;
 
@@ -29,10 +38,15 @@ public class ScanActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_scan);
+
+        setTitle("扫一扫");
+
         captureFragment = new CaptureFragment();
         // 为二维码扫描界面设置定制化界面
         CodeUtils.setFragmentArgs(captureFragment, R.layout.layout_camera);
         captureFragment.setAnalyzeCallback(analyzeCallback);
+//        captureFragment.setPlayBeep(false);
+        captureFragment.setVibrate(false);
         getSupportFragmentManager().beginTransaction().replace(R.id.fl_my_container, captureFragment).commit();
 
         initView();
@@ -57,6 +71,36 @@ public class ScanActivity extends BaseActivity {
         });
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.main_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_photo_album:
+                CodeUtils.openAlbum(this, REQUEST_IMAGE);
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == REQUEST_IMAGE) {
+            if (data != null) {
+                Uri uri = data.getData();
+                try {
+                    CodeUtils.analyzeBitmap(ImageUtil.getImageAbsolutePath(this, uri), analyzeCallback);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        super.onActivityResult(requestCode, resultCode, data);
+    }
 
     /**
      * 二维码解析回调函数
@@ -64,29 +108,36 @@ public class ScanActivity extends BaseActivity {
     CodeUtils.AnalyzeCallback analyzeCallback = new CodeUtils.AnalyzeCallback() {
         @Override
         public void onAnalyzeSuccess(Bitmap mBitmap, String result) {
-            if (result.contains("uid")) {
+            if (result.contains("child-name")) {
                 Toast.makeText(getApplicationContext(), "太撸了，再来一次！", Toast.LENGTH_SHORT).show();
                 captureFragment.reStartPreview();
                 return;
             }
-            Intent resultIntent = new Intent();
-            Bundle bundle = new Bundle();
-            bundle.putInt(CodeUtils.RESULT_TYPE, CodeUtils.RESULT_SUCCESS);
-            bundle.putString(CodeUtils.RESULT_STRING, result);
-            resultIntent.putExtras(bundle);
-            ScanActivity.this.setResult(RESULT_OK, resultIntent);
-            ScanActivity.this.finish();
+
+            ScanResultActivity.luncher(getApplicationContext(), result);
+
+//            Intent resultIntent = new Intent();
+//            Bundle bundle = new Bundle();
+//            bundle.putInt(CodeUtils.RESULT_TYPE, CodeUtils.RESULT_SUCCESS);
+//            bundle.putString(CodeUtils.RESULT_STRING, result);
+//            resultIntent.putExtras(bundle);
+//            ScanActivity.this.setResult(RESULT_OK, resultIntent);
+
+            ScanActivity.this.finish();//离开扫描页面必须finish()
         }
 
         @Override
         public void onAnalyzeFailed() {
-            Intent resultIntent = new Intent();
-            Bundle bundle = new Bundle();
-            bundle.putInt(CodeUtils.RESULT_TYPE, CodeUtils.RESULT_FAILED);
-            bundle.putString(CodeUtils.RESULT_STRING, "");
-            resultIntent.putExtras(bundle);
-            ScanActivity.this.setResult(RESULT_OK, resultIntent);
-            ScanActivity.this.finish();
+            Toast.makeText(getApplicationContext(), "解析二维码失败！", Toast.LENGTH_SHORT).show();
+            captureFragment.reStartPreview();
+
+//            Intent resultIntent = new Intent();
+//            Bundle bundle = new Bundle();
+//            bundle.putInt(CodeUtils.RESULT_TYPE, CodeUtils.RESULT_FAILED);
+//            bundle.putString(CodeUtils.RESULT_STRING, "");
+//            resultIntent.putExtras(bundle);
+//            ScanActivity.this.setResult(RESULT_OK, resultIntent);
+//            ScanActivity.this.finish();//离开扫描页面必须finish()
         }
     };
 }

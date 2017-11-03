@@ -1,10 +1,13 @@
 package com.jusenr.qrcode.util;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.hardware.Camera;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
 import com.google.zxing.BarcodeFormat;
@@ -39,13 +42,24 @@ public class CodeUtils {
 
     public static final String LAYOUT_ID = "layout_id";
 
+    /**
+     * 打开设备相册
+     *
+     * @param activity activity
+     */
+    public static void openAlbum(@NonNull Activity activity, @NonNull int requestCode) {
+        Intent intent = new Intent();
+        intent.setAction(Intent.ACTION_PICK);
+        intent.setType("image/*");
+        activity.startActivityForResult(intent, requestCode);
+    }
 
     /**
      * 解析二维码图片工具类
      *
-     * @param analyzeCallback
+     * @param analyzeCallback AnalyzeCallback
      */
-    public static void analyzeBitmap(String path, AnalyzeCallback analyzeCallback) {
+    public static void analyzeBitmap(@NonNull String path, AnalyzeCallback analyzeCallback) {
 
         /**
          * 首先判断图片的大小,若图片过大,则执行图片的裁剪操作,防止OOM

@@ -40,9 +40,9 @@ public class CaptureFragment extends Fragment implements SurfaceHolder.Callback 
     private String characterSet;
     private InactivityTimer inactivityTimer;
     private MediaPlayer mediaPlayer;
-    private boolean playBeep;
+    private boolean playBeep = true;
     private static final float BEEP_VOLUME = 0.10f;
-    private boolean vibrate;
+    private boolean vibrate = true;
     private SurfaceView surfaceView;
     private SurfaceHolder surfaceHolder;
     private CodeUtils.AnalyzeCallback analyzeCallback;
@@ -73,7 +73,7 @@ public class CaptureFragment extends Fragment implements SurfaceHolder.Callback 
         }
 
         if (view == null) {
-            view = inflater.inflate(R.layout.fragment_capture, null);
+            view = inflater.inflate(R.layout.fragment_capture_view, null);
         }
 
         viewfinderView = (ViewfinderView) view.findViewById(R.id.viewfinder_view);
@@ -95,13 +95,13 @@ public class CaptureFragment extends Fragment implements SurfaceHolder.Callback 
         decodeFormats = null;
         characterSet = null;
 
-        playBeep = true;
+//        playBeep = true;
         AudioManager audioService = (AudioManager) getActivity().getSystemService(getActivity().AUDIO_SERVICE);
         if (audioService.getRingerMode() != AudioManager.RINGER_MODE_NORMAL) {
             playBeep = false;
         }
         initBeepSound();
-        vibrate = true;
+//        vibrate = true;
     }
 
     @Override
@@ -252,6 +252,43 @@ public class CaptureFragment extends Fragment implements SurfaceHolder.Callback 
             Vibrator vibrator = (Vibrator) getActivity().getSystemService(getActivity().VIBRATOR_SERVICE);
             vibrator.vibrate(VIBRATE_DURATION);
         }
+    }
+
+    /**
+     * Play Beep,The default is true.
+     *
+     * @param playBeep playBeep
+     */
+    public void setPlayBeep(boolean playBeep) {
+        this.playBeep = playBeep;
+    }
+
+    /**
+     * Vibrate,The default is true.
+     *
+     * @param vibrate vibrate
+     */
+    public void setVibrate(boolean vibrate) {
+        this.vibrate = vibrate;
+    }
+
+    /**
+     * The type set can scan, do not set or empty, for support.The default is All.
+     * {@link com.jusenr.qrcode.decoding.DecodeFormatManager}
+     *
+     * @param decodeFormats decodeFormats
+     */
+    public void setDecodeFormats(@Nullable Vector<BarcodeFormat> decodeFormats) {
+        this.decodeFormats = decodeFormats;
+    }
+
+    /**
+     * Set the character encoding format.
+     *
+     * @param characterSet characterSet
+     */
+    public void setCharacterSet(@Nullable String characterSet) {
+        this.characterSet = characterSet;
     }
 
     /**

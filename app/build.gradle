@@ -14,11 +14,11 @@ android {
         buildConfigField "String", "LOG_TAG", "\"${rootProject.ext.APP_LOG_TAG}\""
         multiDexEnabled true
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
-//        externalNativeBuild {
-//            cmake {
-//                cppFlags ""
-//            }
-//        }
+        externalNativeBuild {
+            cmake {
+                cppFlags ""
+            }
+        }
     }
     signingConfigs {
         release {
@@ -54,11 +54,11 @@ android {
     dexOptions {
         javaMaxHeapSize "4g"
     }
-//    externalNativeBuild {
-//        cmake {
-//            path "CMakeLists.txt"
-//        }
-//    }
+    externalNativeBuild {
+        cmake {
+            path "CMakeLists.txt"
+        }
+    }
     //产品渠道配置
     productFlavors {
         online { versionName = "V" + defaultConfig.versionName }

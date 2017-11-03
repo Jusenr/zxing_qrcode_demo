@@ -49,7 +49,7 @@ public final class ViewfinderView extends View {
     private Bitmap resultBitmap;
     private final int maskColor;
     private final int resultColor;
-    private final int resultPointColor;
+    private int resultPointColor;
     private Collection<ResultPoint> possibleResultPoints;
     private Collection<ResultPoint> lastPossibleResultPoints;
 
@@ -116,6 +116,8 @@ public final class ViewfinderView extends View {
         SCAN_VELOCITY = ta.getInt(R.styleable.ViewfinderView_inner_scan_speed, 10);
         //是否显示扑捉数据像素小圆点
         isCircle = ta.getBoolean(R.styleable.ViewfinderView_inner_scan_iscircle, true);
+        //数据像素点颜色
+        resultPointColor = getResources().getColor(ta.getResourceId(R.styleable.ViewfinderView_inner_result_points, R.color.possible_result_points));
 
         ta.recycle();
     }
