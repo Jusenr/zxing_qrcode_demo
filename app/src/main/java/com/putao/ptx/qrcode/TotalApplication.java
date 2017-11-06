@@ -15,6 +15,7 @@ import com.jusenr.qrcode.ZXingTools;
  * Project    ：zxing_qrcode_demo.
  */
 public class TotalApplication extends Application {
+    public static final String TAG = TotalApplication.class.getSimpleName();
 
     @Override
     public void onCreate() {
