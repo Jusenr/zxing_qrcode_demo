@@ -3,7 +3,7 @@ package com.putao.ptx.qrcode;
 import android.app.Application;
 import android.support.multidex.MultiDex;
 
-import com.jusenr.qrcode.ZXingTools;
+import com.umeng.analytics.MobclickAgent;
 
 /**
  * Description:
@@ -23,6 +23,9 @@ public class TotalApplication extends Application {
 
         MultiDex.install(getApplicationContext());
 
-        ZXingTools.initDisplayOpinion(getApplicationContext());
+        //UMeng初始化
+        MobclickAgent.setDebugMode(BuildConfig.INNER_TEST);
+        MobclickAgent.setCatchUncaughtExceptions(true);
+        MobclickAgent.openActivityDurationTrack(false);
     }
 }

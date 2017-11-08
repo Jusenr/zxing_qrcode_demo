@@ -12,6 +12,7 @@ android {
         manifestPlaceholders rootProject.ext.MANIFESTPLACEHOLDERS
         //语言环境和logcat日志TAG设置
         buildConfigField "String", "LOG_TAG", "\"${rootProject.ext.APP_LOG_TAG}\""
+        buildConfigField "boolean", "INNER_TEST", "false"
         multiDexEnabled true
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         externalNativeBuild {
@@ -61,6 +62,11 @@ android {
     }
     //产品渠道配置
     productFlavors {
+        innerTest {
+            buildConfigField "boolean", "INNER_TEST", "true"
+            versionName = "T" + rootProject.getVersionName()
+        }
+
         online { versionName = "V" + defaultConfig.versionName }
 
         huawei { versionName = "V" + defaultConfig.versionName }
@@ -96,6 +102,7 @@ dependencies {
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
     compile 'com.android.support:multidex:1.0.1'
     compile 'pub.devrel:easypermissions:0.2.0'
+    compile 'com.umeng.analytics:analytics:latest.integration'
     testCompile 'junit:junit:4.12'
 
     compile project(':qrcode')

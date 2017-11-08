@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -14,7 +15,6 @@ import com.jusenr.qrcode.activity.CaptureFragment;
 import com.jusenr.qrcode.util.CodeUtils;
 import com.putao.ptx.qrcode.R;
 import com.putao.ptx.qrcode.base.BaseActivity;
-import com.putao.ptx.qrcode.utils.ImageUtil;
 
 /**
  * Description: 定制化显示扫描界面
@@ -46,7 +46,7 @@ public class ScanActivity extends BaseActivity {
         CodeUtils.setFragmentArgs(captureFragment, R.layout.layout_camera);
         captureFragment.setAnalyzeCallback(analyzeCallback);
 //        captureFragment.setPlayBeep(false);
-        captureFragment.setVibrate(false);
+//        captureFragment.setVibrate(false);
         getSupportFragmentManager().beginTransaction().replace(R.id.fl_my_container, captureFragment).commit();
 
         initView();
@@ -93,7 +93,7 @@ public class ScanActivity extends BaseActivity {
             if (data != null) {
                 Uri uri = data.getData();
                 try {
-                    CodeUtils.analyzeBitmap(ImageUtil.getImageAbsolutePath(this, uri), analyzeCallback);
+                    CodeUtils.analyzeBitmap(this, uri, analyzeCallback);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -108,13 +108,14 @@ public class ScanActivity extends BaseActivity {
     CodeUtils.AnalyzeCallback analyzeCallback = new CodeUtils.AnalyzeCallback() {
         @Override
         public void onAnalyzeSuccess(Bitmap mBitmap, String result) {
-            if (result.contains("child-name")) {
-                Toast.makeText(getApplicationContext(), "太撸了，再来一次！", Toast.LENGTH_SHORT).show();
-                captureFragment.reStartPreview();
-                return;
-            }
+            if (!TextUtils.isEmpty(result)) {
+                if (result.contains("child-name")) {
+                    Toast.makeText(getApplicationContext(), "太撸了，再来一次！", Toast.LENGTH_SHORT).show();
+                    captureFragment.reStartPreview();
+                    return;
+                }
 
-            ScanResultActivity.luncher(getApplicationContext(), result);
+                ScanResultActivity.luncher(getApplicationContext(), result);
 
 //            Intent resultIntent = new Intent();
 //            Bundle bundle = new Bundle();
@@ -123,7 +124,10 @@ public class ScanActivity extends BaseActivity {
 //            resultIntent.putExtras(bundle);
 //            ScanActivity.this.setResult(RESULT_OK, resultIntent);
 
-            ScanActivity.this.finish();//离开扫描页面必须finish()
+                ScanActivity.this.finish();//离开扫描页面必须finish()
+            } else {
+                captureFragment.reStartPreview();
+            }
         }
 
         @Override

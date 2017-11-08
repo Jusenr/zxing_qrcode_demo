@@ -1,17 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <!--ViewfinderView-->
     <declare-styleable name="ViewfinderView">
         <attr name="inner_width" format="dimension"/>
         <attr name="inner_height" format="dimension"/>
+        <attr name="inner_maskColor" format="color"/>
         <attr name="inner_margintop" format="dimension"/>
-        <attr name="inner_corner_color" format="color"/>
-        <attr name="inner_corner_length" format="dimension"/>
-        <attr name="inner_corner_width" format="dimension"/>
         <attr name="inner_scan_bitmap" format="reference"/>
         <attr name="inner_scan_speed" format="integer"/>
         <attr name="inner_scan_iscircle" format="boolean"/>
+        <attr name="inner_isShowScanLine" format="boolean"/>
         <attr name="inner_result_points" format="reference"/>
+        <attr name="inner_isRoundMode" format="boolean"/>
+
+        <attr name="inn_corner_color" format="color"/>
+        <attr name="inn_corner_length" format="dimension"/>
+        <attr name="inn_corner_width" format="dimension"/>
+
+        <attr name="in_Radius" format="dimension"/>
     </declare-styleable>
 
 </resources>

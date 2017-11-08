@@ -19,7 +19,6 @@ import com.jusenr.qrcode.util.CodeUtils;
 import com.putao.ptx.qrcode.R;
 import com.putao.ptx.qrcode.base.BaseActivity;
 import com.putao.ptx.qrcode.utils.CheckPermissionUtils;
-import com.putao.ptx.qrcode.utils.ImageUtil;
 
 import java.util.List;
 
@@ -138,7 +137,7 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
             if (data != null) {
                 Uri uri = data.getData();
                 try {
-                    CodeUtils.analyzeBitmap(ImageUtil.getImageAbsolutePath(this, uri), new CodeUtils.AnalyzeCallback() {
+                    CodeUtils.analyzeBitmap(CodeUtils.getImageAbsolutePath(this, uri), new CodeUtils.AnalyzeCallback() {
                         @Override
                         public void onAnalyzeSuccess(Bitmap mBitmap, String result) {
                             ScanResultActivity.luncher(getApplicationContext(), result);
@@ -189,7 +188,7 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
 
     @Override
     public void onPermissionsGranted(int requestCode, List<String> perms) {
-        Toast.makeText(this, "执行onPermissionsGranted()...", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "授权申请成功", Toast.LENGTH_SHORT).show();
     }
 
     @Override

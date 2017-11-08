@@ -21,7 +21,7 @@ allprojects {
     repositories {
         jcenter()
         maven { url "https://jitpack.io" }
-        maven { url "https://dl.bintray.com/jusenr/maven/" }
+//        maven { url "https://dl.bintray.com/jusenr/maven/" }
         //AAR local library dependencies
         flatDir {
             dirs 'libs'
@@ -85,5 +85,5 @@ def releaseTime(def format) {
 
 ext {
     APP_LOG_TAG = "ZXing_qrcode"//app打印日志的tag
-    MANIFESTPLACEHOLDERS = [UMENG_APPKEY_VALUE: "123456"]
+    MANIFESTPLACEHOLDERS = [UMENG_APPKEY_VALUE: "5a02d02cf29d986460000148"]
 }

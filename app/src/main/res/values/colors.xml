@@ -6,5 +6,15 @@
 
     <color name="scan_corner_color">#0effc2</color>
 
+    <color name="transparent">@android:color/transparent</color>
+    <color name="divider_color">#E1E1E1</color>
+    <color name="blue">#0076FF</color>
+    <color name="theme">#37C222</color>
+    <color name="main_menu_theme">#218F10</color>
+    <color name="gray">#959595</color>
+    <color name="black">#000</color>
+    <color name="black_alpha_80">#C000</color>
+    <color name="light_gray_black">#646464</color>
+    <color name="gray_black">#333333</color>
 
 </resources>

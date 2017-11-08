@@ -24,13 +24,14 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
-import android.graphics.drawable.Drawable;
+import android.graphics.RectF;
 import android.util.AttributeSet;
 import android.view.View;
 
 import com.google.zxing.ResultPoint;
-import com.jusenr.qrcode.util.DisplayUtil;
 import com.jusenr.qrcode.R;
 import com.jusenr.qrcode.camera.CameraManager;
 
@@ -42,14 +43,25 @@ import java.util.HashSet;
  */
 public final class ViewfinderView extends View {
 
+    private static final int LAYER_FLAGS = Canvas.MATRIX_SAVE_FLAG |
+            Canvas.CLIP_SAVE_FLAG |
+            Canvas.HAS_ALPHA_LAYER_SAVE_FLAG |
+            Canvas.FULL_COLOR_LAYER_SAVE_FLAG |
+            Canvas.CLIP_TO_LAYER_SAVE_FLAG;
+
     private static final long ANIMATION_DELAY = 100L;
     private static final int OPAQUE = 0xFF;
 
     private final Paint paint;
-    private Bitmap resultBitmap;
-    private final int maskColor;
     private final int resultColor;
-    private int resultPointColor;
+    private Bitmap resultBitmap;
+
+    private int maskColor;
+    private int viewWidth;
+    private int viewHeight;
+    private boolean isRoundMode;
+    private boolean isShowScanLine;
+
     private Collection<ResultPoint> possibleResultPoints;
     private Collection<ResultPoint> lastPossibleResultPoints;
 
@@ -59,21 +71,14 @@ public final class ViewfinderView extends View {
 
     public ViewfinderView(Context context, AttributeSet attrs) {
         this(context, attrs, -1);
-
     }
 
     public ViewfinderView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         paint = new Paint();
         Resources resources = getResources();
-        maskColor = resources.getColor(R.color.viewfinder_mask);
         resultColor = resources.getColor(R.color.result_view);
-        resultPointColor = resources.getColor(R.color.possible_result_points);
         possibleResultPoints = new HashSet<>(5);
-
-        scanLight = BitmapFactory.decodeResource(resources,
-                R.drawable.scan_light);
-
         initInnerRect(context, attrs);
     }
 
@@ -85,41 +90,80 @@ public final class ViewfinderView extends View {
      */
     private void initInnerRect(Context context, AttributeSet attrs) {
         TypedArray ta = context.obtainStyledAttributes(attrs, R.styleable.ViewfinderView);
-
         // 扫描框距离顶部
         float innerMarginTop = ta.getDimension(R.styleable.ViewfinderView_inner_margintop, -1);
         if (innerMarginTop != -1) {
             CameraManager.FRAME_MARGINTOP = (int) innerMarginTop;
         }
-
         // 扫描框的宽度
-        CameraManager.FRAME_WIDTH = (int) ta.getDimension(R.styleable.ViewfinderView_inner_width, DisplayUtil.screenWidthPx / 2);
-
+        viewWidth = (int) ta.getDimension(R.styleable.ViewfinderView_inner_width, -1);
         // 扫描框的高度
-        CameraManager.FRAME_HEIGHT = (int) ta.getDimension(R.styleable.ViewfinderView_inner_height, DisplayUtil.screenWidthPx / 2);
+        viewHeight = (int) ta.getDimension(R.styleable.ViewfinderView_inner_height, -1);
+        //扫描框外部背景色
+        maskColor = getResources().getColor(ta.getResourceId(R.styleable.ViewfinderView_inner_maskColor, R.color.viewfinder_mask));
 
         // 扫描框边角颜色
-        innercornercolor = ta.getColor(R.styleable.ViewfinderView_inner_corner_color, Color.parseColor("#45DDDD"));
-        // 扫描框边角长度
-        innercornerlength = (int) ta.getDimension(R.styleable.ViewfinderView_inner_corner_length, 65);
-        // 扫描框边角宽度
-        innercornerwidth = (int) ta.getDimension(R.styleable.ViewfinderView_inner_corner_width, 15);
-
-        // 扫描bitmap
-        Drawable drawable = ta.getDrawable(R.styleable.ViewfinderView_inner_scan_bitmap);
-        if (drawable != null) {
-        }
+        innercornercolor = getResources().getColor(ta.getResourceId(R.styleable.ViewfinderView_inn_corner_color, R.color.color_45DDDD));
+        // 扫描框边角长度 default(65px)
+        innercornerlength = (int) ta.getDimension(R.styleable.ViewfinderView_inn_corner_length, 65);
+        // 扫描框边角宽度 default(15px)
+        innercornerwidth = (int) ta.getDimension(R.styleable.ViewfinderView_inn_corner_width, 15);
 
         // 扫描控件
         scanLight = BitmapFactory.decodeResource(getResources(), ta.getResourceId(R.styleable.ViewfinderView_inner_scan_bitmap, R.drawable.scan_light));
-        // 扫描速度
+        // 扫描速度 default(10)
         SCAN_VELOCITY = ta.getInt(R.styleable.ViewfinderView_inner_scan_speed, 10);
-        //是否显示扑捉数据像素小圆点
+        //是否显示扫描线动画 default(显示扫描线动画true)
+        isShowScanLine = ta.getBoolean(R.styleable.ViewfinderView_inner_isShowScanLine, true);
+
+        //是否展示小圆点 default(展示小圆点true)
         isCircle = ta.getBoolean(R.styleable.ViewfinderView_inner_scan_iscircle, true);
         //数据像素点颜色
         resultPointColor = getResources().getColor(ta.getResourceId(R.styleable.ViewfinderView_inner_result_points, R.color.possible_result_points));
 
+        //显示圆角扫描框(true)还是拐角扫描框(false) default(拐角扫描框false)
+        isRoundMode = ta.getBoolean(R.styleable.ViewfinderView_inner_isRoundMode, false);
+
+        //圆角矩形圆角半径
+        radius = (int) ta.getDimension(R.styleable.ViewfinderView_in_Radius, 20f);
+        radius = dip2px(context, radius);
+
         ta.recycle();
+    }
+
+    @Override
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+        int myWidth = -1;
+        int myHeight = -1;
+
+        final int widthMode = MeasureSpec.getMode(widthMeasureSpec);
+        final int heightMode = MeasureSpec.getMode(heightMeasureSpec);
+        int screenWidth = MeasureSpec.getSize(widthMeasureSpec);
+        int screenHeight = MeasureSpec.getSize(heightMeasureSpec);
+
+        if (widthMode != MeasureSpec.UNSPECIFIED) {
+            myWidth = screenWidth;
+        }
+        if (heightMode != MeasureSpec.UNSPECIFIED) {
+            myHeight = screenHeight;
+        }
+        if (widthMode == MeasureSpec.EXACTLY) {
+            screenWidth = myWidth;
+        }
+        if (heightMode == MeasureSpec.EXACTLY) {
+            screenHeight = myHeight;
+        }
+        if (isInEditMode()) {
+            return;
+        }
+
+        // CameraManager.FRAME_WIDTH和CameraManager.FRAME_HEIGHT相等
+        CameraManager.FRAME_WIDTH = viewWidth != -1 ? viewWidth : screenWidth / 2;
+        CameraManager.FRAME_HEIGHT = viewHeight != -1 ? viewHeight : screenWidth / 2;
+
+        // 需要调用下面的方法才会执行onDraw方法
+        setWillNotDraw(false);
     }
 
     @Override
@@ -128,54 +172,60 @@ public final class ViewfinderView extends View {
         if (frame == null) {
             return;
         }
-        int width = canvas.getWidth();
-        int height = canvas.getHeight();
 
-        // Draw the exterior (i.e. outside the framing rect) darkened
-        paint.setColor(resultBitmap != null ? resultColor : maskColor);
-        canvas.drawRect(0, 0, width, frame.top, paint);
-        canvas.drawRect(0, frame.top, frame.left, frame.bottom + 1, paint);
-        canvas.drawRect(frame.right + 1, frame.top, width, frame.bottom + 1, paint);
-        canvas.drawRect(0, frame.bottom + 1, width, height, paint);
-
-        if (resultBitmap != null) {
-            // Draw the opaque result bitmap over the scanning rectangle
-            paint.setAlpha(OPAQUE);
-            canvas.drawBitmap(resultBitmap, frame.left, frame.top, paint);
+        if (isRoundMode) {
+            drawRoundBackground(canvas, frame);
+            drawRoundRectForeground(canvas, frame);
         } else {
+            drawBackground(canvas, frame);
+            drawRectForeground(canvas, frame);
+        }
 
-            drawFrameBounds(canvas, frame);
-
+        if (isShowScanLine) {
             drawScanLight(canvas, frame);
+        }
 
-            Collection<ResultPoint> currentPossible = possibleResultPoints;
-            Collection<ResultPoint> currentLast = lastPossibleResultPoints;
-            if (currentPossible.isEmpty()) {
-                lastPossibleResultPoints = null;
-            } else {
-                possibleResultPoints = new HashSet<ResultPoint>(5);
-                lastPossibleResultPoints = currentPossible;
-                paint.setAlpha(OPAQUE);
-                paint.setColor(resultPointColor);
+        if (isCircle) {
+            drawCircle(canvas, frame);
+        }
+        postInvalidateDelayed(ANIMATION_DELAY, frame.left, frame.top, frame.right, frame.bottom);
+    }
 
-                if (isCircle) {
-                    for (ResultPoint point : currentPossible) {
-                        canvas.drawCircle(frame.left + point.getX(), frame.top + point.getY(), 6.0f, paint);
-                    }
+    // 是否展示小圆点
+    private boolean isCircle;
+    //数据像素点颜色
+    private int resultPointColor;
+
+    /**
+     * @param canvas
+     * @param frame
+     */
+    private void drawCircle(Canvas canvas, Rect frame) {
+        Collection<ResultPoint> currentPossible = possibleResultPoints;
+        Collection<ResultPoint> currentLast = lastPossibleResultPoints;
+        if (currentPossible.isEmpty()) {
+            lastPossibleResultPoints = null;
+        } else {
+            possibleResultPoints = new HashSet<ResultPoint>(5);
+            lastPossibleResultPoints = currentPossible;
+            paint.setAlpha(OPAQUE);
+            paint.setColor(resultPointColor);
+
+            if (isCircle) {
+                for (ResultPoint point : currentPossible) {
+                    canvas.drawCircle(frame.left + point.getX(), frame.top + point.getY(), 6.0f, paint);
                 }
             }
-            if (currentLast != null) {
-                paint.setAlpha(OPAQUE / 2);
-                paint.setColor(resultPointColor);
+        }
+        if (currentLast != null) {
+            paint.setAlpha(OPAQUE / 2);
+            paint.setColor(resultPointColor);
 
-                if (isCircle) {
-                    for (ResultPoint point : currentLast) {
-                        canvas.drawCircle(frame.left + point.getX(), frame.top + point.getY(), 3.0f, paint);
-                    }
+            if (isCircle) {
+                for (ResultPoint point : currentLast) {
+                    canvas.drawCircle(frame.left + point.getX(), frame.top + point.getY(), 3.0f, paint);
                 }
             }
-
-            postInvalidateDelayed(ANIMATION_DELAY, frame.left, frame.top, frame.right, frame.bottom);
         }
     }
 
@@ -185,8 +235,6 @@ public final class ViewfinderView extends View {
     private int SCAN_VELOCITY;
     // 扫描线
     private Bitmap scanLight;
-    // 是否展示小圆点
-    private boolean isCircle;
 
     /**
      * 绘制移动扫描线
@@ -195,6 +243,7 @@ public final class ViewfinderView extends View {
      * @param frame
      */
     private void drawScanLight(Canvas canvas, Rect frame) {
+        paint.setAlpha(OPAQUE);
 
         if (scanLineTop == 0) {
             scanLineTop = frame.top;
@@ -210,6 +259,40 @@ public final class ViewfinderView extends View {
         canvas.drawBitmap(scanLight, null, scanRect, paint);
     }
 
+    //圆角矩形圆角半径
+    private int radius;
+
+    /**
+     * 绘制有四个圆角的取景框边框
+     *
+     * @return
+     */
+    private void drawRoundRectForeground(Canvas canvas, Rect frame) {
+        paint.setColor(Color.TRANSPARENT);
+        paint.setStyle(Paint.Style.FILL);
+        paint.setAlpha(60);
+
+        //set mode为clear
+        paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_OUT));
+
+        canvas.drawRoundRect(new RectF(frame.left, frame.top, frame.right, frame.bottom), radius, radius, paint);
+        paint.setXfermode(null);
+    }
+
+    private void drawRoundBackground(Canvas canvas, Rect frame) {
+        int width = canvas.getWidth();
+        int height = canvas.getHeight();
+
+        paint.setColor(resultBitmap != null ? resultColor : maskColor);
+
+        canvas.drawRect(0, 0, width, height, paint);
+
+        if (resultBitmap != null) {
+            // Draw the opaque result bitmap over the scanning rectangle
+            paint.setAlpha(OPAQUE);
+            canvas.drawBitmap(resultBitmap, frame.left, frame.top, paint);
+        }
+    }
 
     // 扫描框边角颜色
     private int innercornercolor;
@@ -219,19 +302,12 @@ public final class ViewfinderView extends View {
     private int innercornerwidth;
 
     /**
-     * 绘制取景框边框
+     * 绘制拐角取景框边框
      *
      * @param canvas
      * @param frame
      */
-    private void drawFrameBounds(Canvas canvas, Rect frame) {
-
-        /*paint.setColor(Color.WHITE);
-        paint.setStrokeWidth(2);
-        paint.setStyle(Paint.Style.STROKE);
-
-        canvas.drawRect(frame, paint);*/
-
+    private void drawRectForeground(Canvas canvas, Rect frame) {
         paint.setColor(innercornercolor);
         paint.setStyle(Paint.Style.FILL);
 
@@ -260,16 +336,34 @@ public final class ViewfinderView extends View {
                 frame.right, frame.bottom, paint);
     }
 
+    private void drawBackground(Canvas canvas, Rect frame) {
+        int width = canvas.getWidth();
+        int height = canvas.getHeight();
+
+        // Draw the exterior (i.e. outside the framing rect) darkened
+        paint.setColor(resultBitmap != null ? resultColor : maskColor);
+        canvas.drawRect(0, 0, width, frame.top, paint);
+        canvas.drawRect(0, frame.top, frame.left, frame.bottom + 1, paint);
+        canvas.drawRect(frame.right + 1, frame.top, width, frame.bottom + 1, paint);
+        canvas.drawRect(0, frame.bottom + 1, width, height, paint);
+
+        if (resultBitmap != null) {
+            // Draw the opaque result bitmap over the scanning rectangle
+            paint.setAlpha(OPAQUE);
+            canvas.drawBitmap(resultBitmap, frame.left, frame.top, paint);
+        }
+    }
 
     public void drawViewfinder() {
         resultBitmap = null;
         invalidate();
+        requestFocus();
+        requestLayout();
     }
 
     public void addPossibleResultPoint(ResultPoint point) {
         possibleResultPoints.add(point);
     }
-
 
     /**
      * 根据手机的分辨率从 dp 的单位 转成为 px(像素)
@@ -278,6 +372,4 @@ public final class ViewfinderView extends View {
         final float scale = context.getResources().getDisplayMetrics().density;
         return (int) (dpValue * scale + 0.5f);
     }
-
-
 }

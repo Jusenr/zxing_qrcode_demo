@@ -7,6 +7,8 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 
+import com.umeng.analytics.MobclickAgent;
+
 /**
  * Description:
  * Copyright  : Copyright (c) 2017
@@ -30,6 +32,25 @@ public abstract class BaseActivity extends AppCompatActivity {
         }
 
         mActivity = this;
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        MobclickAgent.onResume(this);
+        MobclickAgent.onPageStart(getLocalClassName());
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        MobclickAgent.onPause(this);
+        MobclickAgent.onPageEnd(getLocalClassName());
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
     }
 
     @Override

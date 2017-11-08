@@ -109,6 +109,7 @@ public class CaptureFragment extends Fragment implements SurfaceHolder.Callback 
         super.onPause();
         if (handler != null) {
             handler.quitSynchronously();
+            handler = null;
         }
         CameraManager.get().closeDriver();
     }
@@ -116,10 +117,6 @@ public class CaptureFragment extends Fragment implements SurfaceHolder.Callback 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if (handler != null) {
-            handler.quitSynchronously();
-            handler = null;
-        }
         inactivityTimer.shutdown();
     }
 
@@ -127,8 +124,8 @@ public class CaptureFragment extends Fragment implements SurfaceHolder.Callback 
     /**
      * Handler scan result
      *
-     * @param result
-     * @param barcode
+     * @param result  result
+     * @param barcode barcode
      */
     public void handleDecode(Result result, Bitmap barcode) {
         inactivityTimer.onActivity();
