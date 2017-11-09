@@ -11,6 +11,7 @@
         <attr name="inner_scan_speed" format="integer"/>
         <attr name="inner_scan_iscircle" format="boolean"/>
         <attr name="inner_isShowScanLine" format="boolean"/>
+        <attr name="inner_scanLineHeight" format="dimension"/>
         <attr name="inner_result_points" format="reference"/>
         <attr name="inner_isRoundMode" format="boolean"/>
 

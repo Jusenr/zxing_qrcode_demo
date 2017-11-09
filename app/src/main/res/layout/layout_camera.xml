@@ -17,7 +17,7 @@
         app:inner_height="200dp"
         app:inner_margintop="150dp"
         app:inner_maskColor="@color/black_alpha_80"
-        app:inner_scan_bitmap="@mipmap/scan_image"
+        app:inner_scan_bitmap="@mipmap/scan_line"
         app:inner_scan_iscircle="false"
         app:inner_scan_speed="20"
 

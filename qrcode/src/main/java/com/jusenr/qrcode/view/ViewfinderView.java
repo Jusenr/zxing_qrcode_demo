@@ -61,6 +61,7 @@ public final class ViewfinderView extends View {
     private int viewHeight;
     private boolean isRoundMode;
     private boolean isShowScanLine;
+    private int scanLineHeight;
 
     private Collection<ResultPoint> possibleResultPoints;
     private Collection<ResultPoint> lastPossibleResultPoints;
@@ -104,10 +105,12 @@ public final class ViewfinderView extends View {
 
         // 扫描框边角颜色
         innercornercolor = getResources().getColor(ta.getResourceId(R.styleable.ViewfinderView_inn_corner_color, R.color.color_45DDDD));
-        // 扫描框边角长度 default(65px)
-        innercornerlength = (int) ta.getDimension(R.styleable.ViewfinderView_inn_corner_length, 65);
-        // 扫描框边角宽度 default(15px)
-        innercornerwidth = (int) ta.getDimension(R.styleable.ViewfinderView_inn_corner_width, 15);
+        // 扫描框边角长度 default(20dp)
+        innercornerlength = (int) ta.getDimension(R.styleable.ViewfinderView_inn_corner_length, 20f);
+        innercornerlength = dip2px(context, innercornerlength);
+        // 扫描框边角宽度 default(3dp)
+        innercornerwidth = (int) ta.getDimension(R.styleable.ViewfinderView_inn_corner_width, 3f);
+        innercornerwidth = dip2px(context, innercornerwidth);
 
         // 扫描控件
         scanLight = BitmapFactory.decodeResource(getResources(), ta.getResourceId(R.styleable.ViewfinderView_inner_scan_bitmap, R.drawable.scan_light));
@@ -115,6 +118,9 @@ public final class ViewfinderView extends View {
         SCAN_VELOCITY = ta.getInt(R.styleable.ViewfinderView_inner_scan_speed, 10);
         //是否显示扫描线动画 default(显示扫描线动画true)
         isShowScanLine = ta.getBoolean(R.styleable.ViewfinderView_inner_isShowScanLine, true);
+        //扫描线条自身高度 default(4dp)
+        scanLineHeight = (int) ta.getDimension(R.styleable.ViewfinderView_inner_scanLineHeight, 4f);
+        scanLineHeight = dip2px(context, scanLineHeight);
 
         //是否展示小圆点 default(展示小圆点true)
         isCircle = ta.getBoolean(R.styleable.ViewfinderView_inner_scan_iscircle, true);
@@ -249,13 +255,13 @@ public final class ViewfinderView extends View {
             scanLineTop = frame.top;
         }
 
-        if (scanLineTop >= frame.bottom - 30) {
+        if (scanLineTop >= frame.bottom - scanLineHeight) {
             scanLineTop = frame.top;
         } else {
             scanLineTop += SCAN_VELOCITY;
         }
         Rect scanRect = new Rect(frame.left, scanLineTop, frame.right,
-                scanLineTop + 30);
+                scanLineTop + scanLineHeight);
         canvas.drawBitmap(scanLight, null, scanRect, paint);
     }
 
@@ -275,7 +281,7 @@ public final class ViewfinderView extends View {
         //set mode为clear
         paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_OUT));
 
-        canvas.drawRoundRect(new RectF(frame.left, frame.top, frame.right, frame.bottom), radius, radius, paint);
+        canvas.drawRoundRect(new RectF(frame.left, frame.top, frame.right, frame.bottom + scanLineHeight), radius, radius, paint);
         paint.setXfermode(null);
     }
 
