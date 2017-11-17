@@ -20,6 +20,8 @@ android {
                 cppFlags ""
             }
         }
+//        flavorDimensions "versionCode"
+        project.archivesBaseName = "qrcode-v$versionName"
     }
     signingConfigs {
         release {
@@ -75,21 +77,6 @@ android {
             flavor.manifestPlaceholders = [UMENG_CHANNEL_VALUE: name]
         }
     }
-
-    //Apk包名自定义
-    applicationVariants.all {
-        variant ->
-            def apkFileName = rootProject.getVersionName()
-            def time = releaseTime("yyyyMMdd")
-            variant.outputs.each {
-                output ->
-                    def outputFile = output.outputFile
-                    if (outputFile != null && outputFile.name.endsWith('.apk')) {
-                        def fileName = outputFile.name.replace(".apk", "-${apkFileName}-${time}.apk")
-                        output.outputFile = new File(outputFile.parent, fileName)
-                    }
-            }
-    }
 }
 
 dependencies {
@@ -107,19 +94,4 @@ dependencies {
 
     compile project(':qrcode')
 //    compile "com.jusenr.android.library:qrcode:$PROJ_VERSIONNAME"
-}
-
-//编译结束后删除unaligned包
-android.applicationVariants.all { variant ->
-    variant.assemble.doLast {
-        variant.outputs.each { output ->
-            println "aligned " + output.outputFile
-            println "unaligned " + output.packageApplication.outputFile
-            File file = output.packageApplication.outputFile
-            if (variant.buildType.zipAlignEnabled && file.getName().contains("unaligned")) {
-                println "deleting " + file.getName()
-                file.delete()
-            }
-        }
-    }
 }
