@@ -43,6 +43,7 @@ import java.util.Vector;
  */
 public class CodeUtils {
 
+    public static final String EXTRA_SHOW_SCAN_TITLE = "show_scan_title";
     public static final String RESULT_TYPE = "result_type";
     public static final String RESULT_STRING = "result_string";
     public static final int RESULT_SUCCESS = 1;

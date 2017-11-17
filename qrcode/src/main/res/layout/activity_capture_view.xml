@@ -7,4 +7,33 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
 
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/about_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@null"
+        android:minHeight="?attr/actionBarSize">
+
+        <TextView
+            android:id="@+id/tv_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:text="@string/scan"
+            android:textColor="@android:color/white"
+            android:textSize="18sp"/>
+
+        <TextView
+            android:id="@+id/tv_album"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_gravity="center_vertical|right"
+            android:layout_marginRight="10dp"
+            android:text="@string/album"
+            android:textColor="@android:color/white"
+            android:textSize="18sp"/>
+
+    </android.support.v7.widget.Toolbar>
+
 </RelativeLayout>

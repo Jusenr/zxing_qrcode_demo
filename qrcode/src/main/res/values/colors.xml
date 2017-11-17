@@ -1,5 +1,6 @@
 <resources>
 
+    <color name="bg_scan_title">#FFFDF8</color>
     <color name="cc">#59a9ff</color>
 
     <color name="bg_color">#EDEDED</color>

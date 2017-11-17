@@ -241,6 +241,7 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
         switch (buttonId) {
             case R.id.button1:
                 Intent intent = new Intent(getApplicationContext(), CaptureActivity.class);
+                intent.putExtra(CodeUtils.EXTRA_SHOW_SCAN_TITLE, true);
                 startActivityForResult(intent, REQUEST_CODE);
                 break;
             case R.id.button3:
