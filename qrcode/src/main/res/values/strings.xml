@@ -1,6 +1,10 @@
 <resources>
     <string name="app_name">qrcode_libaray</string>
 
+    <string name="camera_init_failed">Camera initialization failed!</string>
+
+    <string name="parsing_failure">Analysis of two dimensional code failure!</string>
+
     <string name="scan">Scan</string>
     <string name="album">Album</string>
 

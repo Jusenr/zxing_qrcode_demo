@@ -52,6 +52,7 @@ public class CaptureActivity extends AppCompatActivity {
         boolean isShow = getIntent().getBooleanExtra(CodeUtils.EXTRA_SHOW_SCAN_TITLE, false);
         if (isShow) {
             Toolbar about_toolbar = (Toolbar) findViewById(R.id.about_toolbar);
+            about_toolbar.setVisibility(View.VISIBLE);
             setSupportActionBar(about_toolbar);
             ActionBar actionBar = getSupportActionBar();
             if (actionBar != null) {
@@ -98,10 +99,11 @@ public class CaptureActivity extends AppCompatActivity {
         @Override
         public void onAnalyzeSuccess(Bitmap mBitmap, String result) {
             if (TextUtils.isEmpty(result)) {
-                Toast.makeText(getApplicationContext(), "解析二维码失败！", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), getString(R.string.parsing_failure), Toast.LENGTH_SHORT).show();
                 mCaptureFragment.reStartPreview();
                 return;
             }
+
             Intent resultIntent = new Intent();
             Bundle bundle = new Bundle();
             bundle.putInt(CodeUtils.RESULT_TYPE, CodeUtils.RESULT_SUCCESS);

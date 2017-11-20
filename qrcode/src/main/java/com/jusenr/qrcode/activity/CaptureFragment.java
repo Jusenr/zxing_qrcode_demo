@@ -1,5 +1,6 @@
 package com.jusenr.qrcode.activity;
 
+import android.app.Activity;
 import android.content.res.AssetFileDescriptor;
 import android.graphics.Bitmap;
 import android.hardware.Camera;
@@ -11,10 +12,12 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
+import android.view.Surface;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.Result;
@@ -164,6 +167,15 @@ public class CaptureFragment extends Fragment implements SurfaceHolder.Callback 
         try {
             CameraManager.get().openDriver(surfaceHolder);
             camera = CameraManager.get().getCamera();
+            //Set the camera as the rear camera.
+            int cameraId = android.hardware.Camera.CameraInfo.CAMERA_FACING_BACK;
+            //Nexus 5x and other equipment two-dimensional code scanning pixel inversion problem processing.
+            if (camera != null) {
+                setCameraDisplayOrientation(getActivity(), cameraId, camera);
+            } else {
+                Toast.makeText(getActivity(), getResources().getString(R.string.camera_init_failed), Toast.LENGTH_SHORT).show();
+                return;
+            }
         } catch (Exception e) {
             if (callBack != null) {
                 callBack.callBack(e);
@@ -322,5 +334,42 @@ public class CaptureFragment extends Fragment implements SurfaceHolder.Callback 
          * @param e If is's null,means success.otherwise Camera init failed with the Exception.
          */
         void callBack(Exception e);
+    }
+
+    /**
+     * If you want to make the camera image show in the same orientation as the display, you can use the following code.
+     *
+     * @param activity activity
+     * @param cameraId cameraId
+     * @param camera   camera
+     */
+    public static void setCameraDisplayOrientation(Activity activity, int cameraId, android.hardware.Camera camera) {
+        android.hardware.Camera.CameraInfo info = new android.hardware.Camera.CameraInfo();
+        android.hardware.Camera.getCameraInfo(cameraId, info);
+        int rotation = activity.getWindowManager().getDefaultDisplay().getRotation();
+        int degrees = 0;
+        switch (rotation) {
+            case Surface.ROTATION_0:
+                degrees = 0;
+                break;
+            case Surface.ROTATION_90:
+                degrees = 90;
+                break;
+            case Surface.ROTATION_180:
+                degrees = 180;
+                break;
+            case Surface.ROTATION_270:
+                degrees = 270;
+                break;
+        }
+
+        int result;
+        if (info.facing == Camera.CameraInfo.CAMERA_FACING_FRONT) {
+            result = (info.orientation + degrees) % 360;
+            result = (360 - result) % 360;  // compensate the mirror
+        } else {  // back-facing
+            result = (info.orientation - degrees + 360) % 360;
+        }
+        camera.setDisplayOrientation(result);
     }
 }
