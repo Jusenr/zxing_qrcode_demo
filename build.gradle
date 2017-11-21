@@ -3,14 +3,15 @@
 buildscript {
     repositories {
         jcenter()
+        google()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:2.3.3'
+        classpath 'com.android.tools.build:gradle:3.0.0'
 
         classpath 'com.github.dcendents:android-maven-gradle-plugin:1.5'
 
         //maven
-        classpath 'com.novoda:bintray-release:0.4.0'
+        classpath 'com.novoda:bintray-release:0.5.0'
 
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
@@ -20,6 +21,7 @@ buildscript {
 allprojects {
     repositories {
         jcenter()
+        google()
         maven { url "https://jitpack.io" }
 //        maven { url "https://dl.bintray.com/jusenr/maven/" }
         //AAR local library dependencies
@@ -55,10 +57,6 @@ task clean(type: Delete) {
     delete rootProject.buildDir
 }
 
-//task assemble(type: Assemble) {
-//    delete "$rootDir/app/build/outputs"
-//}
-
 //Get version number
 def getVersionName() {
     int num = rootProject.properties["PROJ_VERSION_NUM"] as int
@@ -68,7 +66,6 @@ def getVersionName() {
         return project.properties["PROJ_VERSIONNAME"]
     }
 }
-
 //Git commit times
 int gitVersionCode() {
     if (System.getenv("CI_BUILD")) {
@@ -77,7 +74,6 @@ int gitVersionCode() {
     def count = "git rev-list HEAD --count".execute().text.trim()
     return count.isInteger() ? count.toInteger() : 0
 }
-
 //Get current time
 def releaseTime(def format) {
     return new Date().format(format)

@@ -3,6 +3,7 @@ package com.putao.ptx.qrcode;
 import android.app.Application;
 import android.support.multidex.MultiDex;
 
+import com.jusenr.toolslibrary.AndroidTools;
 import com.umeng.analytics.MobclickAgent;
 
 /**
@@ -23,9 +24,13 @@ public class TotalApplication extends Application {
 
         MultiDex.install(getApplicationContext());
 
-        //UMeng初始化
+//        if (AppUtils.isNamedProcess(getApplicationContext(), getPackageName())) {
+        //androidtools init
+        AndroidTools.init(getApplicationContext(), BuildConfig.LOG_TAG);
+        //UMeng init
         MobclickAgent.setDebugMode(BuildConfig.INNER_TEST);
         MobclickAgent.setCatchUncaughtExceptions(true);
         MobclickAgent.openActivityDurationTrack(false);
+//        }
     }
 }

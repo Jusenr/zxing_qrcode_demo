@@ -2,7 +2,7 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 26
-    buildToolsVersion "26.0.1"
+    buildToolsVersion "26.0.2"
     defaultConfig {
         applicationId "com.putao.ptx.qrcode"
         minSdkVersion 19
@@ -20,7 +20,7 @@ android {
                 cppFlags ""
             }
         }
-//        flavorDimensions "versionCode"
+        flavorDimensions "versionCode"
         project.archivesBaseName = "qrcode-v$versionName"
     }
     signingConfigs {
@@ -69,12 +69,12 @@ android {
             versionName = "T" + rootProject.getVersionName()
         }
 
-        online { versionName = "V" + defaultConfig.versionName }
+        online { versionName = "V" + rootProject.getVersionName() }
 
         huawei { versionName = "V" + defaultConfig.versionName }
 
         productFlavors.all { flavor ->
-            flavor.manifestPlaceholders = [UMENG_CHANNEL_VALUE: name]
+            flavor.manifestPlaceholders = [CHANNEL_VALUE: name]
         }
     }
 }
@@ -87,10 +87,12 @@ dependencies {
     compile 'com.android.support:appcompat-v7:26.+'
     compile 'com.android.support:design:26.+'
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
-    compile 'com.android.support:multidex:1.0.1'
+    compile 'com.android.support:multidex:1.0.2'
     compile 'pub.devrel:easypermissions:0.2.0'
     compile 'com.umeng.analytics:analytics:latest.integration'
     testCompile 'junit:junit:4.12'
+
+    compile 'com.jusenr.android.library:androidtools:1.3.9'
 
     compile project(':qrcode')
 //    compile "com.jusenr.android.library:qrcode:$PROJ_VERSIONNAME"
