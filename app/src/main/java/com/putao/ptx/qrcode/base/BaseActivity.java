@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.MenuItem;
 
 import com.umeng.analytics.MobclickAgent;
@@ -39,6 +40,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         super.onResume();
         MobclickAgent.onResume(this);
         MobclickAgent.onPageStart(getLocalClassName());
+        Log.i("Activity", "onResume: " + getLocalClassName());
     }
 
     @Override
@@ -46,6 +48,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         super.onPause();
         MobclickAgent.onPause(this);
         MobclickAgent.onPageEnd(getLocalClassName());
+        Log.i("Activity", "onPause: " + getLocalClassName());
     }
 
     @Override

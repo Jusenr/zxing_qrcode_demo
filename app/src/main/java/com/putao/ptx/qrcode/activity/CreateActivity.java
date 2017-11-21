@@ -23,7 +23,7 @@ import com.putao.ptx.qrcode.base.BaseActivity;
  * Time       : 10:46
  * Project    ：zxing_qrcode_demo.
  */
-public class CreateActivity extends BaseActivity {
+public class  CreateActivity extends BaseActivity {
 
     public EditText editText = null;
     public Button button = null;
