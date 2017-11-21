@@ -1,9 +1,11 @@
 package com.putao.ptx.qrcode;
 
 import android.app.Application;
+import android.content.pm.ApplicationInfo;
 import android.support.multidex.MultiDex;
 
 import com.jusenr.toolslibrary.AndroidTools;
+import com.jusenr.toolslibrary.utils.AppUtils;
 import com.umeng.analytics.MobclickAgent;
 
 /**
@@ -28,6 +30,11 @@ public class TotalApplication extends Application {
         //androidtools init
         AndroidTools.init(getApplicationContext(), BuildConfig.LOG_TAG);
         //UMeng init
+        ApplicationInfo info = AppUtils.getApplicationInfo(getApplicationContext());
+        String umeng_appkey = info.metaData.getString("UMENG_APPKEY");
+        String umeng_channel = info.metaData.getString("UMENG_CHANNEL");
+        MobclickAgent.UMAnalyticsConfig config = new MobclickAgent.UMAnalyticsConfig(getApplicationContext(), umeng_appkey, umeng_channel);
+        MobclickAgent.startWithConfigure(config);
         MobclickAgent.setDebugMode(BuildConfig.INNER_TEST);
         MobclickAgent.setCatchUncaughtExceptions(true);
         MobclickAgent.openActivityDurationTrack(false);
