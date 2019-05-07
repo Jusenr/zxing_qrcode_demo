@@ -11,7 +11,7 @@ buildscript {
         classpath 'com.github.dcendents:android-maven-gradle-plugin:1.5'
 
         //maven
-        classpath 'com.novoda:bintray-release:0.5.0'
+        classpath 'com.novoda:bintray-release:0.9'
 
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
@@ -39,7 +39,7 @@ allprojects {
         options.addStringOption('encoding', 'UTF-8')
         options.addStringOption('charSet', 'UTF-8')
         options.addStringOption('link', 'http://docs.oracle.com/javase/7/docs/api')
-        options.addStringOption('windowtitle', 'androidtools')
+        options.addStringOption('windowtitle', 'sweepCode')
         options.addBooleanOption('author', true)
         options.addBooleanOption('version', true)
     }
