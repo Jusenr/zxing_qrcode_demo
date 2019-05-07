@@ -1,13 +1,12 @@
 <resources>
     <string name="app_name">qrcode_libaray</string>
 
-    <string name="camera_init_failed">相机初始化失败!</string>
+    <string name="camera_init_failed">相機初始化失敗!</string>
 
-    <string name="parsing_failure">解析二维码失败！</string>
+    <string name="parsing_failure">解析二維碼失敗！</string>
 
-    <string name="scan">扫一扫</string>
+    <string name="scan">掃一掃</string>
     <string name="album">相册</string>
 
     <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
-

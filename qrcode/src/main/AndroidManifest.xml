@@ -17,7 +17,6 @@
         <activity
             android:name="com.jusenr.qrcode.activity.CaptureActivity"
             android:configChanges="orientation|keyboardHidden"
-            android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.NoActionBar"
             android:windowSoftInputMode="stateAlwaysHidden"/>
     </application>

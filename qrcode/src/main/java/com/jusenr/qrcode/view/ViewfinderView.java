@@ -43,11 +43,11 @@ import java.util.HashSet;
  */
 public final class ViewfinderView extends View {
 
-    private static final int LAYER_FLAGS = Canvas.MATRIX_SAVE_FLAG |
-            Canvas.CLIP_SAVE_FLAG |
-            Canvas.HAS_ALPHA_LAYER_SAVE_FLAG |
-            Canvas.FULL_COLOR_LAYER_SAVE_FLAG |
-            Canvas.CLIP_TO_LAYER_SAVE_FLAG;
+//    private static final int LAYER_FLAGS = Canvas.MATRIX_SAVE_FLAG |
+//            Canvas.CLIP_SAVE_FLAG |
+//            Canvas.HAS_ALPHA_LAYER_SAVE_FLAG |
+//            Canvas.FULL_COLOR_LAYER_SAVE_FLAG |
+//            Canvas.CLIP_TO_LAYER_SAVE_FLAG;
 
     private static final long ANIMATION_DELAY = 100L;
     private static final int OPAQUE = 0xFF;
