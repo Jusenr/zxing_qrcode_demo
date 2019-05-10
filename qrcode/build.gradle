@@ -40,4 +40,4 @@ dependencies {
 }
 
 //apply from: "https://raw.githubusercontent.com/Jusenr/resources/master/bintray.gradle"
-//apply from: "../bintray.gradle"
+apply from: "../bintray.gradle"

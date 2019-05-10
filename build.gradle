@@ -15,6 +15,10 @@ buildscript {
 
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
+
+        classpath 'org.apache.maven.plugins:maven-javadoc-plugin:3.1.0'//配置生成Javadoc包
+        classpath 'org.apache.maven.plugins:maven-source-plugin:3.0.1'//配置生成源码包
+        classpath 'org.apache.maven.plugins:maven-compiler-plugin:3.8.1'
     }
 }
 
