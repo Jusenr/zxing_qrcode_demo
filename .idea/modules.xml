@@ -2,9 +2,12 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/Jusenr-zxing_qrcode_demo.iml" filepath="$PROJECT_DIR$/.idea/modules/Jusenr-zxing_qrcode_demo.iml" group="zxing_qrcode_demo" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/qrcode/com.github.Jusenr-qrcode.iml" filepath="$PROJECT_DIR$/.idea/modules/qrcode/com.github.Jusenr-qrcode.iml" group="zxing_qrcode_demo/qrcode" />
       <module fileurl="file://$PROJECT_DIR$/qrcode/qrcode.iml" filepath="$PROJECT_DIR$/qrcode/qrcode.iml" />
       <module fileurl="file://$PROJECT_DIR$/zxing_qrcode_demo.iml" filepath="$PROJECT_DIR$/zxing_qrcode_demo.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/zxing_qrcode_demo-app.iml" filepath="$PROJECT_DIR$/.idea/modules/app/zxing_qrcode_demo-app.iml" group="zxing_qrcode_demo/app" />
     </modules>
   </component>
 </project>
